@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myhttpdclaim
+  labels:
+    app: apache
+spec:
+  # Using defaukt storage class defined by Minikube
+  #storageClassName: "test-sc"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

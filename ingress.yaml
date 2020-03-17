@@ -1,0 +1,16 @@
+# apiVersion: networking.k8s.io/v1beta1
+# kind: Ingress
+# metadata:
+#   name: httpd-ingress
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+#     labels:
+#         app: apache
+# spec:
+#   rules:
+#   - http:
+#       paths:
+#       - path: /webserver
+#         backend:
+#           serviceName: apache
+#           servicePort: 8080
