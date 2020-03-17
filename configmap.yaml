@@ -1,0 +1,8 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: cm-httpd
+  labels:
+    app: apache
+data:
+  env: test

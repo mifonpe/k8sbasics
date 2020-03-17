@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-deployment
+  labels:
+    app: apache
+spec:
+  # We want three replicas to be up!
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: apache
+        image: docker.io/bitnami/apache:2.4.41-debian-10-r29
+        # Generates a customized main page and executes the container's original entrypoint
+        command: ["/bin/sh","-c"]
+        args: ["/home/script/index.sh; /entrypoint.sh /run.sh"]
+        env:
+            # Environment Variable which stores the value from the cm
+            - name: ENV_VAR
+              valueFrom:
+                configMapKeyRef:
+                  # ConfigMap Name
+                  name: cm-httpd
+                  # Key for the desired value
+                  key: env
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: user-pass-secret
+          mountPath: "/etc/usrpwd"
+          readOnly: true
+        - name: web-persistence
+          mountPath: "/app"
+        - name: script
+          mountPath: "/home/script"
+          readOnly: true
+
+      volumes:
+      - name: user-pass-secret
+        secret:
+          secretName: secret-httpd
+      - name: web-persistence
+        persistentVolumeClaim:
+          claimName: myhttpdclaim
+      - name: script
+        configMap:
+          name: cm-script
+          defaultMode: 0755
+
+
